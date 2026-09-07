@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Water–Ice Investigation | Classroom Virtual Lab v2</title>
+<style>
+:root{--navy:#12395a;--blue:#2b7db8;--ink:#17324b;--muted:#62778b;--line:#cbd7e1;--bg:#eef4f8;--paper:#fff;--good:#2f8f5b;--warn:#e7a33a;--bad:#b54a4a}
+*{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(#dcebf5,#f7fafc);color:var(--ink)}
+header{background:var(--navy);color:white;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap} header h1{margin:0;font-size:22px} header p{margin:3px 0 0;opacity:.9;font-size:12px}
+main{max-width:1450px;margin:auto;padding:16px}.layout{display:grid;grid-template-columns:310px 1fr 330px;gap:15px}.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:0 5px 18px rgba(15,45,70,.09)}
+h2{font-size:16px;margin:0 0 11px}.sub{color:var(--muted);font-size:12px;line-height:1.45}.safety{background:#fff7e7;border-left:5px solid var(--warn);padding:9px;border-radius:8px;font-size:12px;line-height:1.45}
+select,input{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);font:inherit} button{border:0;border-radius:9px;padding:9px 12px;font:inherit;font-weight:700;cursor:pointer;background:var(--blue);color:white}button.secondary{background:#e8eff4;color:var(--ink)}button:disabled{opacity:.45;cursor:not-allowed}
+.steps{display:grid;gap:7px}.step{padding:9px;border:1px solid var(--line);border-radius:9px;font-size:12px;background:#f8fafc}.step.active{border-color:var(--blue);background:#e9f5fd}.step.done{border-color:#89b99c;background:#eff8f2}.step.locked{opacity:.45}
+.progress{height:9px;background:#e7edf2;border-radius:50px;overflow:hidden;margin:10px 0}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#70b8dd,#2678b9)}
+.lab{height:590px;position:relative;overflow:hidden;border-radius:12px;border:1px solid #a6bac8;background:linear-gradient(#d7edf8 0 46%,#d0b78d 46%)}
+.wall{position:absolute;inset:0 0 54% 0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 1px,transparent 1px 48px),repeating-linear-gradient(0deg,rgba(255,255,255,.4) 0 1px,transparent 1px 48px)}
+.bench{position:absolute;left:0;right:0;bottom:0;height:54%;background:linear-gradient(90deg,#b99c73,#d5bd96,#b69a70);box-shadow:inset 0 10px 0 #8d7557}
+.reservoir{position:absolute;left:4%;bottom:27%;width:145px;height:172px;border:5px solid #7e97a6;border-top:0;border-radius:0 0 20px 20px;background:linear-gradient(#9bd2eb 0 38%,#5ea9d0 39%);box-shadow:inset 0 0 0 4px rgba(255,255,255,.25)}
+.reservoir:before{content:'WATER TEMPERATURE\A RESERVOIR';white-space:pre;position:absolute;top:-42px;left:-6px;width:145px;text-align:center;font-size:10px;font-weight:800;color:#496072}
+.cup{position:absolute;width:150px;height:174px;bottom:26%;border:4px solid rgba(239,247,250,.95);border-top:0;border-radius:0 0 21px 21px;background:rgba(255,255,255,.14);box-shadow:0 7px 12px rgba(0,0,0,.14)}
+#iceCup{left:34%}#waterCup{right:5%}
+.liquid{position:absolute;left:4px;right:4px;bottom:4px;height:60%;border-radius:0 0 16px 16px;background:linear-gradient(#7cc5e7cc,#4f9cc7dd);transition:height .7s ease}
+.ice{position:absolute;width:44px;height:34px;background:linear-gradient(135deg,#fff,#b9e9ff);border:2px solid #8fc7df;border-radius:8px;box-shadow:0 2px 5px #0002;transition:all .6s ease}.i1{left:26px;bottom:104px;transform:rotate(-8deg)}.i2{left:68px;bottom:82px;transform:rotate(12deg)}.i3{left:48px;bottom:56px;transform:rotate(5deg)}
+.lid{position:absolute;width:160px;height:22px;border:4px solid #eef7fa;border-radius:13px;background:rgba(255,255,255,.48);top:-21px;left:-9px;display:none}.thermo{position:absolute;width:18px;height:178px;border-radius:10px;background:#f4f4f4;border:2px solid #7b8992;right:24px;top:-91px;transform:rotate(7deg);display:none}.thermo:after{content:'';position:absolute;width:7px;height:118px;left:4px;bottom:12px;background:#d65b52;border-radius:6px}.thermo:before{content:'°C';position:absolute;top:11px;right:-31px;font-size:10px;font-weight:800;color:#42596a}
+.scale{position:absolute;left:41%;top:20%;width:230px;height:96px;background:#edf2f5;border:4px solid #6c7d89;border-radius:11px;box-shadow:0 6px 10px #0002;display:none}.pan{position:absolute;left:21px;top:-33px;width:180px;height:25px;background:#d7e1e7;border:3px solid #7b8c97;border-radius:50%}.screen{position:absolute;left:64px;top:39px;background:#19342c;color:#8df0a5;border:3px solid #53645e;padding:4px 12px;font:18px Consolas,monospace}.unit{position:absolute;right:20px;top:45px;font-weight:800;font-size:11px}
+.pourstream{position:absolute;width:13px;height:0;background:#66b5dc;left:62%;top:39%;border-radius:9px;opacity:0;transition:.6s}.pourstream.on{height:145px;opacity:1}
+.status{position:absolute;left:50%;top:4%;transform:translateX(-50%);max-width:84%;background:rgba(255,255,255,.94);border:1px solid #b9c9d4;border-radius:12px;padding:9px 14px;box-shadow:0 3px 9px #0002;text-align:center;font-size:13px;font-weight:700}
+.controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.controls button{flex:1 1 145px}.readouts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.metric{background:#f4f8fb;border:1px solid var(--line);border-radius:9px;padding:9px}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{font-size:17px}
+table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid var(--line);padding:6px}th{background:#edf3f7;text-align:left}td:not(:first-child),th:not(:first-child){text-align:right}.log{height:118px;overflow:auto;background:#f7fafc;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:11px;line-height:1.45}.log div{margin-bottom:3px}
+.analysis{margin-top:15px}.analysis ol{margin-top:7px;font-size:13px}.note{font-size:11px;color:var(--muted);line-height:1.4}
+.modal{position:fixed;inset:0;background:rgba(16,42,67,.72);display:none;align-items:center;justify-content:center;z-index:100}.modal.show{display:flex}.modalbox{width:min(720px,92vw);background:#fff;border-radius:18px;padding:24px;box-shadow:0 20px 60px #0005}.modalbox h2{font-size:20px}.stop{background:#fff2d5;border-left:6px solid var(--warn);padding:12px;border-radius:9px;font-weight:800}.choices{display:grid;gap:8px;margin:13px 0}.choices button{text-align:left;background:#eef4f8;color:var(--ink);border:2px solid #cbd7e1}.choices button.correct{background:#edf9f1;border-color:var(--good)}.choices button.wrong{background:#fff0f0;border-color:var(--bad)}.feedback{min-height:35px;font-size:13px;font-weight:700}.modal .continue{min-width:150px}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.lab{height:560px}}
+</style>
+</head>
+<body>
+<header><div><h1>🧪 Water–Ice Investigation — Classroom Virtual Lab v2</h1><p>Procedure-driven simulation with real-lab style instruments, staged actions, and STOP & THINK checkpoints.</p></div><strong>CLASSROOM MODE</strong></header>
+<main>
+<div class="layout">
+<aside class="card">
+<h2>Safety</h2><div class="safety">Wear splash goggles, nitrile gloves, and a non-latex apron. Secure loose clothing, tie back long hair, wipe spills immediately, use electrical equipment safely, and work under direct supervision.</div>
+<h2 style="margin-top:16px">Select Trial</h2><select id="trial"><option value="A">A — 50 g warmer water</option><option value="B">B — 50 g cooler water</option><option value="C">C — 25 g warmer water</option><option value="D">D — 25 g cooler water</option><option value="E">E — 75 g warmer water</option><option value="F">F — 75 g cooler water</option></select>
+<h2 style="margin-top:16px">Procedure</h2><div class="steps" id="steps"></div><div class="progress"><i id="progress"></i></div>
+<div class="controls"><button id="startBtn">Start Part 1</button><button class="secondary" id="resetBtn">Reset</button></div>
+<p class="note">The handout requires students to dry the ice, mass the ice, measure water mass and starting temperature, combine the water and ice, stabilize the final temperature, separate meltwater, and mass the two resulting portions.</p>
+</aside>
+<section class="card">
+<h2>Laboratory Workbench</h2>
+<div class="lab">
+<div class="wall"></div><div class="bench"></div><div class="reservoir"></div>
+<div id="iceCup" class="cup"><div id="iceLiquid" class="liquid"></div><div class="ice i1"></div><div class="ice i2"></div><div class="ice i3"></div><div id="iceLid" class="lid"></div><div id="iceThermo" class="thermo"></div></div>
+<div id="waterCup" class="cup"><div id="waterLiquid" class="liquid"></div><div id="waterLid" class="lid"></div><div id="waterThermo" class="thermo"></div></div>
+<div id="scale" class="scale"><div class="pan"></div><div id="scaleValue" class="screen">0.00</div><div class="unit">g</div></div>
+<div id="stream" class="pourstream"></div>
+<div id="status" class="status">Click <em>Start Part 1</em> to begin.</div>
+</div>
+<div class="controls">
+<button id="tareBtn" disabled>⚖ Tare Scale</button><button id="dryBtn" disabled>🧻 Dry Ice</button><button id="transferIceBtn" disabled>🧊 Transfer Ice</button>
+<button id="measureWaterBtn" disabled>💧 Measure Water</button><button id="thermoWaterBtn" disabled>🌡 Water Thermometer</button><button id="swirlWaterBtn" disabled>↻ Stabilize Water</button>
+<button id="pourBtn" disabled>🫗 Pour Water Into Ice</button><button id="thermoIceBtn" disabled>🌡 Mixture Thermometer</button><button id="swirlIceBtn" disabled>↻ Stabilize Mixture</button>
+<button id="separateBtn" disabled>⇩ Separate Meltwater</button><button id="massFinalBtn" disabled>⚖ Mass Final Samples</button><button id="analyzeBtn" disabled>📊 Analyze</button>
+</div>
+</section>
+<aside class="card">
+<h2>Live Measurements</h2><div class="readouts"><div class="metric"><span>Ice mass</span><b id="mIce">—</b></div><div class="metric"><span>Water mass</span><b id="mWater">—</b></div><div class="metric"><span>Initial temp</span><b id="mInitial">—</b></div><div class="metric"><span>Final temp</span><b id="mFinal">—</b></div><div class="metric"><span>Ice mass lost</span><b id="mLoss">—</b></div><div class="metric"><span>Water mass gained</span><b id="mGain">—</b></div></div>
+<h2 style="margin-top:16px">Student Data Record</h2><table><tbody id="record"></tbody></table>
+<h2 style="margin-top:16px">Lab Log</h2><div class="log" id="log"></div>
+<h2 style="margin-top:16px">Hypothesis</h2><div class="sub">When heat from the warm water increases, the mass of ice that melts will…</div><input id="hyp" placeholder="Complete the hypothesis here.">
+</aside>
+</div>
+<div class="card analysis"><h2>Analysis</h2><ol><li>How much did the temperature change?</li><li>How much mass did the ice lose?</li><li>How much mass did the water gain?</li><li>Enter these values into the class data table.</li></ol></div>
+</main>
+<div id="modal" class="modal"><div class="modalbox"><h2 id="modalTitle">⏸ STOP & THINK</h2><div id="modalPrompt" class="stop"></div><div id="choices" class="choices"></div><div id="feedback" class="feedback"></div><button id="continueBtn" class="continue" disabled>Continue Lab</button></div></div>
+<script>
+const DATA={
+A:{condition:'50 g warmer water',water:50.27,dt:-36,iceLoss:19.80,waterGain:15.69,initial:37.5,final:1.5},
+B:{condition:'50 g cooler water',water:50.40,dt:-23.5,iceLoss:14.75,waterGain:14.69,initial:25.0,final:1.5},
+C:{condition:'25 g warmer water',water:26.14,dt:-31.9,iceLoss:12.70,waterGain:12.40,initial:33.4,final:1.5},
+D:{condition:'25 g cooler water',water:25.95,dt:-21,iceLoss:8.59,waterGain:7.59,initial:22.5,final:1.5},
+E:{condition:'75 g warmer water',water:75.50,dt:-36.3,iceLoss:34.98,waterGain:32.97,initial:37.8,final:1.5},
+F:{condition:'75 g cooler water',water:75.72,dt:-23.8,iceLoss:24.23,waterGain:23.74,initial:25.3,final:1.5}
+};
+const cps=[
+['Checkpoint 1 — Tare','The empty foam cup and lid are on the balance. What should happen before adding ice?',['Tare the balance to 0.00 g.','Pour water in.','Insert the thermometer.','Record the cup mass.'],0,'Correct. The balance must be tared first.'],
+['Checkpoint 2 — Prepare Ice','What should happen immediately before the ice is transferred to the cup?',['Heat the ice.','Dry off the ice.','Add water.','Remove all lids.'],1,'Correct. The procedure says to dry the ice before transfer.'],
+['Checkpoint 3 — Starting Temperature','When should the starting temperature be recorded?',['Immediately after inserting the thermometer.','After swirling until the reading is stable for 15 seconds.','After adding ice.','After pouring the water.'],1,'Correct. The handout requires a stable reading after 15 seconds.'],
+['Checkpoint 4 — Combine','What happens after the starting water temperature is recorded?',['Pour the water into the cup containing the ice.','Mass the empty cup again.','Discard the ice.','Heat the water.'],0,'Correct. The water is poured into the ice cup.'],
+['Checkpoint 5 — Final Temperature','Before recording the final temperature, what should the student do?',['Add more ice.','Swirl until the temperature is relatively stable.','Pour off the water.','Remove the thermometer.'],1,'Correct. Swirl until the final reading is stable.'],
+['Checkpoint 6 — Separate','How should the meltwater be separated from the remaining ice?',['Pour out ice and water together.','Tilt the cup and pour off liquid while keeping the ice in the original cup.','Heat the cup.','Leave everything in place.'],1,'Correct. Keep the ice in the original cup while pouring the liquid into a tared cup.'],
+['Checkpoint 7 — Analyze','Which changes should be calculated?',['Temperature change, ice mass lost, and water mass gained.','Cup color and cup height.','Only final temperature.','Only water mass.'],0,'Correct. Those are the three requested analysis measurements.']
+];
+let trial='A',part=0,state={},cp=null;
+const $=id=>document.getElementById(id);function log(t){$('log').innerHTML+='<div>• '+t+'</div>';$('log').scrollTop=$('log').scrollHeight}function status(t){$('status').innerHTML=t}
+function steps(){const names=['Part 1 — Mass the ice','Part 2 — Measure water','Part 3 — Combine and measure final temperature','Part 4 — Separate and mass','Analysis'];$('steps').innerHTML=names.map((n,i)=>'<div class="step '+(i===part?'active ':'')+(i>part?'locked ':'')+(i<part?'done ':'')+'">'+n+'</div>').join('');$('progress').style.width=(part/4*100)+'%'}
+function record(){const d=DATA[trial], rows=[['Ice mass',state.ice?state.ice.toFixed(2)+' g':'—'],['Water mass',state.water?d.water.toFixed(2)+' g':'—'],['Initial temperature',state.initial?d.initial.toFixed(1)+' °C':'—'],['Final temperature',state.final?d.final.toFixed(1)+' °C':'—'],['Ice mass after melting',state.finalMass?(40-d.iceLoss).toFixed(2)+' g':'—'],['Water mass after melting',state.finalMass?(d.water+d.waterGain).toFixed(2)+' g':'—']];$('record').innerHTML=rows.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')}
+function metrics(){const d=DATA[trial];$('mIce').textContent=state.ice?'40.00 g':'—';$('mWater').textContent=state.water?d.water.toFixed(2)+' g':'—';$('mInitial').textContent=state.initial?d.initial.toFixed(1)+' °C':'—';$('mFinal').textContent=state.final?d.final.toFixed(1)+' °C':'—';$('mLoss').textContent=state.finalMass?d.iceLoss.toFixed(2)+' g':'—';$('mGain').textContent=state.finalMass?d.waterGain.toFixed(2)+' g':'—';record()}
+function reset(){part=0;state={};$('log').innerHTML='';$('hyp').value='';$('scale').style.display='none';$('iceLid').style.display='none';$('waterLid').style.display='none';$('iceThermo').style.display='none';$('waterThermo').style.display='none';$('stream').classList.remove('on');$('scaleValue').textContent='0.00';document.querySelectorAll('.ice').forEach(x=>x.style.opacity=1);document.querySelectorAll('.liquid').forEach(x=>x.style.height='60%');['tareBtn','dryBtn','transferIceBtn','measureWaterBtn','thermoWaterBtn','swirlWaterBtn','pourBtn','thermoIceBtn','swirlIceBtn','separateBtn','massFinalBtn','analyzeBtn'].forEach(id=>$(id).disabled=true);$('startBtn').disabled=false;$('startBtn').textContent='Start Part 1';status('Click <em>Start Part 1</em> to begin.');steps();metrics()}
+function checkpoint(i){cp=i;$('modalTitle').textContent='⏸ '+cps[i][0];$('modalPrompt').textContent=cps[i][1];$('feedback').textContent='';$('continueBtn').disabled=true;const box=$('choices');box.innerHTML='';cps[i][2].forEach((txt,j)=>{const b=document.createElement('button');b.textContent=txt;b.onclick=()=>{if(j===cps[i][3]){b.classList.add('correct');[...box.children].forEach(x=>x.disabled=true);$('feedback').textContent='✓ '+cps[i][4];$('continueBtn').disabled=false;log('Checkpoint '+(i+1)+' answered correctly.')}else{$('feedback').textContent='Not quite. Review the procedure and try again.';b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),500)}};box.appendChild(b)});$('modal').classList.add('show')}
+$('continueBtn').onclick=()=>{$('modal').classList.remove('show');$('continueBtn').disabled=true;advanceAfterCheckpoint()}
+function advanceAfterCheckpoint(){if(cp===0){part=1;steps();$('startBtn').disabled=false;$('startBtn').textContent='Begin Part 2'}else if(cp===1){part=1;steps();$('dryBtn').disabled=false}else if(cp===2){part=2;steps();$('pourBtn').disabled=false}else if(cp===3){$('thermoIceBtn').disabled=false;part=2;steps()}else if(cp===4){part=3;steps();$('separateBtn').disabled=false}else if(cp===5){$('massFinalBtn').disabled=false;part=3;steps()}else if(cp===6){part=4;steps();$('analyzeBtn').disabled=false}}
+$('startBtn').onclick=()=>{if(part===0){part=0;$('scale').style.display='block';$('tareBtn').disabled=false;$('startBtn').disabled=true;status('Place the empty foam cup and lid on the balance, then click Tare Scale.');log('Part 1 started.')}else if(part===1){$('startBtn').disabled=true;$('scale').style.display='block';$('measureWaterBtn').disabled=false;status('Tare the empty water cup + lid, then measure the assigned water mass.');log('Part 2 started.')}}
+$('tareBtn').onclick=()=>{state.tared=true;$('scaleValue').textContent='0.00';$('tareBtn').disabled=true;$('dryBtn').disabled=false;status('Balance tared. Now dry the piece of ice before transfer.');log('Balance tared to 0.00 g.');checkpoint(0)}
+$('dryBtn').onclick=()=>{$('dryBtn').disabled=true;$('transferIceBtn').disabled=false;status('Ice is dry. Transfer it carefully into the cup.');log('Ice surface dried.')}
+$('transferIceBtn').onclick=()=>{state.ice=40;$('transferIceBtn').disabled=true;$('iceLid').style.display='block';$('scaleValue').textContent='40.00';status('Ice transferred and massed.');log('Ice mass recorded: 40.00 g.');metrics();checkpoint(1)}
+$('measureWaterBtn').onclick=()=>{state.water=true;$('measureWaterBtn').disabled=true;$('waterLid').style.display='block';$('scaleValue').textContent=DATA[trial].water.toFixed(2);$('thermoWaterBtn').disabled=false;status('Water measured. Insert the thermometer through the lid.');log('Water mass recorded: '+DATA[trial].water.toFixed(2)+' g.');metrics()}
+$('thermoWaterBtn').onclick=()=>{$('thermoWaterBtn').disabled=true;$('waterThermo').style.display='block';$('swirlWaterBtn').disabled=false;status('Swirl the water until the temperature is stable for 15 seconds.');log('Thermometer inserted into water.')}
+$('swirlWaterBtn').onclick=()=>{state.initial=true;$('swirlWaterBtn').disabled=true;status('Stable starting temperature: '+DATA[trial].initial.toFixed(1)+' °C.');log('Starting temperature recorded: '+DATA[trial].initial.toFixed(1)+' °C.');metrics();checkpoint(2)}
+$('pourBtn').onclick=()=>{$('pourBtn').disabled=true;$('iceLid').style.display='block';$('waterLid').style.display='none';$('stream').classList.add('on');status('Water is being poured into the ice cup.');log('Water poured into the ice cup.');setTimeout(()=>{$('stream').classList.remove('on');$('thermoIceBtn').disabled=false;status('Water has been added. Insert the thermometer into the ice-water mixture.');checkpoint(3)},700)}
+$('thermoIceBtn').onclick=()=>{$('thermoIceBtn').disabled=true;$('iceThermo').style.display='block';$('swirlIceBtn').disabled=false;status('Swirl the mixture until the thermometer reading is stable.');log('Mixture thermometer inserted.')}
+$('swirlIceBtn').onclick=()=>{state.final=true;$('swirlIceBtn').disabled=true;status('Stable final temperature: '+DATA[trial].final.toFixed(1)+' °C.');log('Final temperature recorded: '+DATA[trial].final.toFixed(1)+' °C.');metrics();checkpoint(4)}
+$('separateBtn').onclick=()=>{$('separateBtn').disabled=true;status('Pouring liquid meltwater into the empty cup while keeping ice in the original cup.');log('Meltwater separated from remaining ice.');setTimeout(()=>checkpoint(5),550)}
+$('massFinalBtn').onclick=()=>{state.finalMass=true;$('massFinalBtn').disabled=true;const d=DATA[trial];$('scaleValue').textContent=(d.water+d.waterGain).toFixed(2);$('iceLiquid').style.height='10%';document.querySelectorAll('.ice').forEach((x,i)=>{if(i>0)x.style.opacity=.6});status('Final masses recorded. Water gain = '+d.waterGain.toFixed(2)+' g; ice loss = '+d.iceLoss.toFixed(2)+' g.');log('Water gain: '+d.waterGain.toFixed(2)+' g.');log('Ice loss: '+d.iceLoss.toFixed(2)+' g.');metrics();checkpoint(6)}
+$('analyzeBtn').onclick=()=>{const d=DATA[trial];status('<strong>Trial complete.</strong> ΔT = '+d.dt+' °C; ice lost = '+d.iceLoss.toFixed(2)+' g; water gained = '+d.waterGain.toFixed(2)+' g.');log('Analysis complete.');$('analyzeBtn').disabled=true}
+$('trial').onchange=()=>{trial=$('trial').value;reset()};$('resetBtn').onclick=reset;reset();
+</script>
+</body></html>
